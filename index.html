@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="ru" ng-app="myCountersApp">
+<head>
+  <meta charset="utf-8">
+  <title>Home Counters</title>
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
+  <link rel="stylesheet" href="css/app.css">
+
+    <script type="text/template" id="counter-view-template">
+        <div class='counter-container'>
+            <div class='counter-title'><%- title %></div>
+            <div class='<%= type %> counter-icon'>&nbsp</div>
+			<div class='row'>
+				<div class='col-lg-6'>
+            		<div>Название:</div>
+            		<div>Начальное значение:</div>
+            		<div>Текущее значение:</div>
+            		<div>Общий расход</div>
+            	</div>
+				<div class='col-lg-6'>
+            		<div><%- title %></div>
+            		<div><%- initValue %> &nbsp <%= unit %></div>
+            		<div><%- curValue %> &nbsp <%= unit %></div>
+            		<div><%= total %></div>
+            	<!--div><%= unit %></div-->
+            	</div>
+            </div>
+            <div>
+                <button class="editCounter glyphicon glyphicon-pencil blue" title='Изменить'></button>
+                <button class="removeCounter glyphicon glyphicon-remove red" title='Удалить'></button>
+		    </div>
+		</div>
+    </script>
+    <script type="text/template" id="counter-view1-template">
+        <td class='<%= type %>'>&nbsp</td>
+        <td><%- title %></td>
+        <td><%- initValue %></td>
+        <td><%- curValue %></td>
+        <td><%= total %></td>
+        <td><%= unit %></td>
+        <td>
+		    <button class="editCounter glyphicon glyphicon-pencil blue" title='Изменить'></button>
+            <button class="removeCounter glyphicon glyphicon-remove red" title='Удалить'></button>
+		</td>
+    </script>
+
+    <script type="text/template" id="counter-edit-template">
+        <div class='counter-container'>
+			<div class='row'>
+				<div class='col-lg-6'>
+            		<div>Тип:</div>
+            		<div>Название:</div>
+            		<div>Начальное значение:</div>
+            		<div>Текущее значение:</div>
+            	</div>
+				<div class='col-lg-6'>
+            		<select class="uppercase" autofocus>
+				        <option value="water">cold water</option>
+		        		<option value="water">hot water</option>
+		        		<option value="gas">gas</option>
+		        		<option value="heating">heating</option>
+		        		<option value="internet">internet</option>
+		        		<option value="custom">custom</option>
+			    	</select>
+            		<input type="text" col="title" value="<%= title %>" maxlength="45" size="8">
+            		<input type="text" col="init" value="<%= initValue %>" maxlength="10" size="8">
+            		<input type="text" col="current" value="<%= curValue %>" maxlength="10" size="8">
+            		<input type="text" col="unit" value="<%= unit %>" maxlength="10" size="8">
+            	</div>
+            </div>
+            <div class="align-right">
+                <button class="saveCounter glyphicon glyphicon-ok green" title='Сохранить'></button>
+                <button class="cancelCounter glyphicon glyphicon-remove red" title='Отменить'></button>
+		    </div>
+		</div>
+    </script>
+    <script type="text/template" id="counter-edit1-template">
+	    <td>
+		    <select class="uppercase" autofocus>
+		        <option value="electricity">electricity</option>
+		        <option value="water">water</option>
+		        <option value="gas">gas</option>
+		        <option value="custom">custom</option>
+		    </select>
+		</td>
+        <td>
+		    <input type="text" col="title" value="<%= title %>" maxlength="45">
+		</td>
+        <td>
+		    <input type="text" col="init" value="<%= initValue %>" maxlength="10">
+		</td>
+        <td>
+		    <input type="text" col="current" value="<%= curValue %>" maxlength="10">
+		</td>
+        <td><%- total %></td>
+        <td>
+		    <input type="text" col="unit" value="<%= unit %>" maxlength="10">
+		</td>
+        <td>
+		    <button class="saveCounter glyphicon glyphicon-ok green" title='Сохранить'></button>
+            <button class="cancelCounter glyphicon glyphicon-remove red" title='Отменить'></button>
+		</td>
+    </script>
+
+	<script type="text/template" id="counter-new-template">
+	    <td>
+		    <select class="uppercase" autofocus>
+		        <option  value="electricity">electricity</option>
+		        <option value="water">cold water</option>
+		        <option value="water">hot water</option>
+		        <option value="gas">gas</option>
+		        <option value="heating">heating</option>
+		        <option value="internet">internet</option>
+		        <option value="custom">custom</option>
+		    </select>
+		</td>
+        <td>
+		    <input type="text" col="title" value="<%= title %>" maxlength=45">
+		</td>
+        <td>
+		    <input type="text" col="init" value="<%= initValue %>" maxlength="10">
+		</td>
+        <td>
+		    <input type="text" col="current" value="<%= curValue %>" maxlength=10">
+		</td>
+        <td><%- total %></td>
+        <td>
+		    <input type="text" col="unit" value="<%= unit %>" maxlength=10">
+		</td>
+        <td>
+		    <button class="saveCounter glyphicon glyphicon-ok green" title='Сохранить'></button>
+            <button class="removeCounter glyphicon glyphicon-remove red" title='Удалить'></button>
+		</td>
+    </script>
+
+    <script type="text/template" id="counters-collection-template">
+	    <div class='row'>
+            <div class="col-lg-2 secondary-menu-item">
+			    Счетчики
+		    </div>
+		</div>
+	    <div class='row collections'>
+            <div class='counter-container glyphicon glyphicon-plus col-lg-4'>
+		</div>
+
+            <!--button class="addNewCounter">Добавить новый счетчик</button-->
+		</div>
+    </script>
+    <script type="text/template" id="counters-collection1-template">
+	    <div class='row'>
+            <div class="col-lg-2 secondary-menu-item">
+			    Счетчики
+		    </div>
+		</div>
+	    <div class='row'>
+            <table class="countersTable col-lg-12 table table-bordered">
+                <thead>
+                    <th>Тип</th>
+                    <th>Описание</th>
+                    <th>Начальное значение</th>
+                    <th>Текущее значение</th>
+                    <th>Суммарный расход</th>
+                    <th>Ед.изм.</th>
+                    <th>Действия</th>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <button class="addNewCounter">Добавить новый счетчик</button>
+		</div>
+    </script>
+
+    <script src="/bower_components/jquery/dist/jquery.js"></script>
+    <script src="/bower_components/underscore/underscore.js"></script>
+    <script src="/bower_components/backbone/backbone.js"></script>
+    <script src="/bower_components/backbone-validation/dist/backbone-validation.js"></script>
+    <script src="/bower_components/moment/min/moment.min.js"></script>
+
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+    <script src="http://code.highcharts.com/modules/exporting.js"></script>	
+
+    <script src="js/custom.js"></script>
+    <script src="js/model/CounterModel.js"></script>
+    <script src="js/view/CountersListItemView.js"></script>
+    <script src="js/view/CountersListView.js"></script>
+    <script src="js/collection/CountersCollection.js"></script>
+    <script src="js/CountersApp.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            window.app = new CountersApp();
+            Backbone.history.start({ pushState: true });
+			(function(){
+			    function updateDate() {
+				    var d = moment();
+				    $('#date').html(d.date());
+				    $('#month').html(d.format('MMMM'));
+				    $('#year').html(d.year());
+				};
+				updateDate();
+			    setInterval(updateDate, 60000);
+			})();
+			
+			$('#charts').on('click', highchartsInit);
+        });
+    </script>
+
+</head>
+<body>
+    <div class='container'>
+        <div id='header-top'>
+            <div class='align-right date'>
+                <div id='month'>
+                </div>
+                <div id='date'>
+                </div>
+                <div id='year'>
+                </div>
+            </div>
+            <div id='header' class='text-center'>
+                  <a href='/'> Учет коммунальных расходов </a>
+            </div>
+        </div>
+
+        <div class="clear">
+        </div>
+        <div id="charts-container">
+        </div>
+        <div class="main-container">
+        </div>
+        <div class="row main-menu">
+            <a href='/counters' class='col-lg-4 main-menu-item'>
+                <div class='counters'>
+                </div>
+                <div class='main-item-text text-center'>
+                    Счетчики
+                </div>
+            </a>
+            <a href='/calendar' class='col-lg-4 main-menu-item'>
+                <div class='calendar'>
+                </div>
+                <div class='main-item-text text-center'>
+                    Журнал
+                </div>
+            </a>
+            <a href='/charts' id='charts' class='col-lg-4 main-menu-item'>
+                <div class='charts'>
+                </div>
+                <div class='main-item-text text-center'>
+                    Графики
+                </div>
+            </a>
+        </div>
+    </div>
+</body>
+</html>
